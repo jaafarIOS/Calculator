@@ -15,12 +15,13 @@ struct ContentView: View {
         ["7", "8", "9", "X"],
         ["4", "5", "6", "-"],
         ["1", "2", "3", "+"],
-        ["0", ".", "="]
+        ["0",".", "="]
     ]
     
     // ... @Stack variales are defined here
  
     @State var finalValue:String = "Welcom In Here"
+    
       
       // This holds the expression which has been entered by the user.
       @State var calExpression: [String] = []
@@ -75,8 +76,6 @@ struct ContentView: View {
                 Text(self.finalValue)
                     .font(Font.custom("HelveticaNeue-Thin", size: 50))
                     .bold()
-
-                    //.font(Font.custom("HelveticaNeue-Thin", size: 40))
                          .frame(idealWidth: 200, maxWidth: .infinity, idealHeight: 200, maxHeight: .infinity, alignment: .bottomTrailing)
                          .foregroundColor(Color.white)
                 Text(flattenTheExpression(exps: calExpression))
@@ -129,10 +128,10 @@ struct ContentView: View {
                                     }
                                     
                                 }, label: {
-//                                    if Text(column) == "0" {
-//                                        .foregroundColor(Color.red)
-//                                    }
-                                    
+//                                   let zero = row[4,0]
+//                                    Text(zero)
+//                                        .font(.system(size: getFontSize(btnTxt: column)))
+//                                        .frame(idealWidth: 100, maxWidth: .infinity, idealHeight: 100, maxHeight: .infinity, alignment: .center)
                                     Text(column)
                                         .font(.system(size: getFontSize(btnTxt: column)))
                                         .frame(idealWidth: 100, maxWidth: .infinity, idealHeight: 100, maxHeight: .infinity, alignment: .center)
