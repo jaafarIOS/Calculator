@@ -2,14 +2,14 @@
 //  ContentView.swift
 //  Calculator
 //
-//  Created by Consultant on 1/17/23.
+//  Created by Jaafar Zubaidi on 1/17/23.
 //
 
 import SwiftUI
 
 struct ContentView: View {
     
-    // Array with button titles for each
+    // Array with button titles f2or each
     let rows = [
         ["A/C", "+/-", "%", "/"],
         ["7", "8", "9", "X"],
@@ -58,7 +58,7 @@ struct ContentView: View {
             case "A/C":
                 a! = 0.0
             case "%":
-                a! = (c * 100) / 100
+                a! = c * 0.01
             case "+/-":
                 a! = c * -1
             default:
@@ -66,26 +66,30 @@ struct ContentView: View {
             }
         }
         
-        return String(format: "%.1f", a!)
+        return String(format: "%.2f", a!)
     }
     
     var body: some View {
+        
+    
         VStack {
             VStack {
-                
+              
+                Text(flattenTheExpression(exps: calExpression))
+                    .font(Font.custom("HelveticaNeue-Thin", size: 50))
+                    .frame(alignment: Alignment.bottomTrailing)
+                    .foregroundColor(Color.white)
                 Text(self.finalValue)
                     .font(Font.custom("HelveticaNeue-Thin", size: 50))
                     .bold()
                          .frame(idealWidth: 200, maxWidth: .infinity, idealHeight: 200, maxHeight: .infinity, alignment: .bottomTrailing)
                          .foregroundColor(Color.white)
-                Text(flattenTheExpression(exps: calExpression))
-                    .font(Font.custom("HelveticaNeue-Thin", size: 50))
-                    .frame(alignment: Alignment.bottomTrailing)
-                    .foregroundColor(Color.white)
+               
                 
                 // This will give a bottom padding to our Text above.
                 Spacer()
-            
+                Spacer()
+                Spacer()
             }
             .frame(minWidth: 100, maxWidth: .infinity, minHeight: 100, maxHeight: .infinity, alignment: .topLeading)
             .background(ThemeColor.DarkGray.color)
@@ -96,8 +100,8 @@ struct ContentView: View {
                     ForEach(rows, id: \.self) { row in
                         HStack(alignment: .top, spacing: 5) {
                             ForEach(row, id: \.self) { column in
+                                let x = (column != "0" ? 85.0 : 205.0)
                                 Button(action: {
-                                    
                                     if column == "=" {
                                         self.calExpression = []
                                         self.noBeingEntered = ""
@@ -121,20 +125,22 @@ struct ContentView: View {
                                         }
                                     }
                                     
-                                    self.finalValue = processExpression(exp: self.calExpression)
+                                  self.finalValue = processExpression(exp: self.calExpression)
                                     // This code ensures that future operations are done on evaluated result rather than evaluating the expression from scratch.
+                                    if self.calExpression.contains(["%"])  {
+                                        let value = calExpression[0]
+                                        guard let floatValue = Float(value) else { return }
+                                        self.calExpression = ["\(floatValue * 0.01)"]
+                                        print("HABIBIII")
+                                        //self.calExpression = [self.finalValue, self.calExpression[self.calExpression * "0.01"]]
+                                    }
                                     if self.calExpression.count > 3 {
                                         self.calExpression = [self.finalValue, self.calExpression[self.calExpression.count - 1]]
                                     }
-                                    
                                 }, label: {
-//                                   let zero = row[4,0]
-//                                    Text(zero)
-//                                        .font(.system(size: getFontSize(btnTxt: column)))
-//                                        .frame(idealWidth: 100, maxWidth: .infinity, idealHeight: 100, maxHeight: .infinity, alignment: .center)
                                     Text(column)
                                         .font(.system(size: getFontSize(btnTxt: column)))
-                                        .frame(idealWidth: 100, maxWidth: .infinity, idealHeight: 100, maxHeight: .infinity, alignment: .center)
+                                        .frame(idealWidth: 100, maxWidth: x, idealHeight: 100, maxHeight: .infinity)
                                 }
                                 )
                                 .foregroundColor(Color.white)
@@ -151,8 +157,8 @@ struct ContentView: View {
             .background(Color.black)
             .edgesIgnoringSafeArea(.all)
             .padding(SwiftUI.EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0))
-        }
     }
+}
 
 enum ThemeColor {
     case DarkGray
@@ -185,13 +191,7 @@ func getBackground(str:String) -> Color {
     }
     return Color.gray
 }
-//func getBackground1(str1:String) -> Color {
-//
-//    if checkIfOperator1(str1: str1) {
-//        return .yellow
-//    }
-//    return .white
-//}
+
 
 // Return differnt font sizes for operators and numbers.
 func getFontSize(btnTxt: String) -> CGFloat {
